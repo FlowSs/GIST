@@ -35,7 +35,7 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--obj_model', help='Objective model to compare to reference', default=None)
     parser.add_argument('-i', '--ind', help='Random instance among objective model to use', default=None, type=int)
     parser.add_argument('-d', '--dataset', help='Dataset to use for computation', default='cifar10')
-    parser.add_argument('-t', '--type', help='Test set type (test, fuzz, adv, gen)', default='normal')
+    parser.add_argument('-t', '--type', help='Test set type (fuzz, gen)', default=None)
     parser.add_argument('--heatmap', help='to display the final heatmap or not', action='store_true')
     args = parser.parse_args()
 
@@ -56,7 +56,7 @@ if __name__ == '__main__':
         if args.dataset == 'cifar10':
             plt.xticks(rotation=0)
         plt.xlabel('Reference models', fontsize=15)
-        plt.ylabel('Objective models', fontsize=15)
+        plt.ylabel('Models under test', fontsize=15)
         plt.tight_layout()
         plt.show()
     else:

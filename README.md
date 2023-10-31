@@ -8,7 +8,7 @@ This replication package contains the artifact associated with the paper "GIST: 
 
 ![framework](image.png)
 
-The idea of test transfer is simple: If one already generated a bunch of test sets with the same procedure P for some models, given a new objective model we would like to test, which of those test sets would be the "best" to apply to this objective model. By "best" we mean the one that behaves similarly according to some property (M_O) compared to a hypothetical objective test set that would have been generated using the procedure P on the objective model. We invite readers who want to know more to read the preprint version.
+The idea of test transfer is simple: If one already generated a bunch of test sets with the same procedure P for some models, given a new model under test we would like to test, which of those test sets would be the "best" to apply to this model under test. By "best" we mean the one that behaves similarly according to some property (M_O) compared to a hypothetical test set that would have been generated using the procedure P on the model under test. We invite readers who want to know more to read the preprint version.
 
 *GIST* is a general framework, i.e. the properties M_O and M can be any that are desired. But to assess the framework, we experimented on a particular set (M_O, M), which this replication package is for.
 
@@ -319,7 +319,7 @@ The obtained test data generated on each of the models can be downloaded (see *A
 
 ## Setup
 
-In order to answer our research questions, we first had to follow the steps detailed in our methodology, i.e. generate for each model the test sets for each procedure, extract prediction/features and cluster for each objective model/procedure. Note that if you download all the required files (see *A note on replication*), you will not need to do that.
+In order to answer our research questions, we first had to follow the steps detailed in our methodology, i.e. generate for each model the test sets for each procedure, extract prediction/features and cluster for each model under test/procedure. Note that if you download all the required files (see *A note on replication*), you will not need to do that.
 
 ### Extracting features/prediction
 
@@ -353,7 +353,7 @@ Basic usage is:
 python generate_pred_sets.py -d cifar10 -t fuzz -tm preresnet110_0 -b 128 --device cuda
 ```
 
-This will extract the features files from the model *PreResnet110* (seed 0) (i.e. the target) by using all other models (except *PreResnet110*) generated fuzz test sets and save it in a numpy array name `preresnet110_0_fuzz_X.npz` inside the `pred_sets/cifar10/` directory, where X is the name of model from which we used the test set (e.g. `preresnet20_0`). The batch size is set to 128 and it uses GPU acceleration. This must be done on all models, both being or not being a target. This will allow us to experimentally verify that a given metric M works for all models, by considering them alternately to be the objective model. Note that it will skip the extraction if the file already exists unless the argument `--override` is provided.
+This will extract the features files from the model *PreResnet110* (seed 0) (i.e. the target) by using all other models (except *PreResnet110*) generated fuzz test sets and save it in a numpy array name `preresnet110_0_fuzz_X.npz` inside the `pred_sets/cifar10/` directory, where X is the name of model from which we used the test set (e.g. `preresnet20_0`). The batch size is set to 128 and it uses GPU acceleration. This must be done on all models, both being or not being a target. This will allow us to experimentally verify that a given metric M works for all models, by considering them alternately to be the model under test. Note that it will skip the extraction if the file already exists unless the argument `--override` is provided.
 
 ## Clustering
 
@@ -382,7 +382,7 @@ Where basic usage is:
 python clustering.py -d cifar10 -t fuzz -o preresnet110 -i 0
 ```
 
-This will calculate the clusters using *PreResnet110* (seed 0) as the objective model, pooling all the extracted features of the fuzz procedures that were computed previously. The results will be saved as a `.json` file in the corresponding `pred_sets/` directory and start as `cov_type2_...`. The option `--save_mod` allows to saving of the UMAP and HBSCAN models if needed and `--save_clust` allows saving the data themselves in the clusters which are needed to evaluate the accuracy over clusters (see *Clusters Validations* below), saving the data in the `data/` directory (name starting with `data_cov_X.npz`). The hyperparameters used are present in this script as well. Readers can find in the `results_files/` directory the obtained results (DBCV, silhouette score...) we obtained in our experiments for each of the procedures.
+This will calculate the clusters using *PreResnet110* (seed 0) as the model under test, pooling all the extracted features of the fuzz procedures that were computed previously. The results will be saved as a `.json` file in the corresponding `pred_sets/` directory and start as `cov_type2_...`. The option `--save_mod` allows to saving of the UMAP and HBSCAN models if needed and `--save_clust` allows saving the data themselves in the clusters which are needed to evaluate the accuracy over clusters (see *Clusters Validations* below), saving the data in the `data/` directory (name starting with `data_cov_X.npz`). The hyperparameters used are present in this script as well. Readers can find in the `results_files/` directory the obtained results (DBCV, silhouette score...) we obtained in our experiments for each of the procedures.
 
 # Research Questions
 
@@ -438,7 +438,7 @@ Note that, as we wrote in the paper, the thresholds to cluster here are subjecti
 
 ## RQ2: Are some test sets more likely to increase fault types coverage on an objective model depending on the reference model they were generated on?
 
-The heatmaps in RQ2 were obtained using `grouped_faults.py`, however, you first need to calculate the matrix for the heatmap. To do so, one needs to execute the following command for all objective models:
+The heatmaps in RQ2 were obtained using `grouped_faults.py`, however, you first need to calculate the matrix for the heatmap. To do so, one needs to execute the following command for all models under test:
 
 ```
 python grouped_faults.py -d cifar10 -t fuzz -o densenet100bc -i 1
@@ -462,7 +462,9 @@ To obtain the correlations, one must run the script `compute_corr.py`. This scri
 python compute_corr.py -d cifar10 -t fuzz -o densenet100bc -i 0
 ```
 
-If `--save` is provided, the results will be added to a `.csv` file named `res.csv`. Note that, since it only ADDS the results, one has to be careful if some results already have been computed. It does not delete the files before executing nor doesn't it check whether the file is already populated or not. The `res.csv` file will contain the data needed to obtain Table 3 in our paper. It needs to be done for all objective models and all procedures in order to have the same Table 3. We provide said data in `results_files/`, in each `res_PROCEDURE.csv` file.
+If `--save` is provided, the results will be added to a `.csv` file named `res.csv`. Note that, since it only ADDS the results, one has to be careful if some results already have been computed. It does not delete the files before executing nor doesn't it check whether the file is already populated or not. The `res.csv` file will contain the data needed to obtain Table 3 in our paper. It needs to be done for all models under test and all procedures in order to have the same Table 3. We provide said data in `results_files/`, in each `res_PROCEDURE.csv` file.
+
+Each `res_PROCEDURE.csv` is structured as follow: each row is the result for a model under test seed for a given similarity metric. It is structured in block of 6 rows (one for each metric), e.g. the first 6 rows are the results for the 6 metrics (PWCCA, CKA, Ortho, Acc, Dis and JDiv) for Densenet100bc seed 0, then the 6 next are for the 6 metrics for Densenet100bc seed 1, ...etc Available data are the obtained Kendall-tau, the associated p-value, the Top-1 and Top-5 criterion as well as the fault type coverage value obtained for the Top-1 and Top-5 criteria.
 
 If `--plot` is given, the data will be plotted to examine the correlation. 
 
@@ -471,3 +473,5 @@ If `--plot` is given, the data will be plotted to examine the correlation.
 The first part of RQ4 (Table 4) uses the same data from the previous `res.csv` files (that we saved in `results_files/`).
 
 The second part of RQ4 (Table 5) uses the other generated `.csv` file i.e. `res_mult.csv` where the users can find the fault types coverage using the Overall Best First and Each Best First criteria for k = {2, 3 4}. We also provided those files in the directory `results_files/` with `res_mult_PROCEDURE.csv`.
+
+Each `res_mult_PROCEDURE.csv` is structured similarly as the `res_PROCEDURE.csv` files, with the same block structure of size 6. Available data are the obtained fault types coveraged by combining k = {2, 3, 4} test sets using EBF criterion and by combining k = {2, 3, 4} test sets using the OBF criterion.
