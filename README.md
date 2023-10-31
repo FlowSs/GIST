@@ -1,6 +1,6 @@
 ## Replication package for "GIST: Generated Inputs Sets Transferability in Deep Learning"
 
-This replication package contains the artifact associated with the paper "GIST: Generated Inputs Sets Transferability in Deep Learning" in order to help in replicating the results. This paper was submitted to the the *ACM Transactions on Software Engineering and Methodology* journal.
+This replication package contains the artifact associated with the paper "GIST: Generated Inputs Sets Transferability in Deep Learning" in order to help in replicating the results. This paper was submitted to the *ACM Transactions on Software Engineering and Methodology* journal.
 
 **A preprint version of the paper is available on [arxiv]()**
 
@@ -16,17 +16,17 @@ The idea of test transfer is simple: If one already generated a bunch of test se
 
 A notebook for demonstration of the method is available in the repository `demo/` (`demo.ipynb`). It shows GIST working with a simple example and can also serve as a basic skeleton for customization for other properties or proxies. 
 
-The demo only requires Python, basic packages scientific packages (numpy, matplotlib and scipy) and the data used which can be downloaded on [Zenodo]() along with this repository.
+The demo only requires Python, basic packages scientific packages (numpy, matplotlib and scipy) and the data used which can be downloaded on [Zenodo](https://zenodo.org/records/10028594) along with this repository.
 
 ## A note on replication
 
 In order to replicate the results, you must first download the artifacts. We provide Zenodo links to download them. Once downloaded, extract each file to the corresponding repository:
 
-* [**data**](): Contains the generated test sets for both datasets as well as the used procedure (Fuzzing, ...)
+* [**data**](https://zenodo.org/records/10028594): Contains the generated test sets for both datasets as well as the used procedure (Fuzzing, ...)
 
-* [**models**](): All the model seeds used in our experiments.
+* [**models**](https://zenodo.org/records/10028594): All the model seeds used in our experiments.
 
-* [**pred_sets**](): The extracted predictions and features for each test set are applied to each model.
+* [**pred_sets**](https://zenodo.org/records/10028594): The extracted predictions and features for each test set are applied to each model.
 
 Once done, you can run the different scrips (see below) and you should obtain similar results. While we fixed as much as possible the seeds, there might be some differences as some operations aren't 100% deterministic (e.g. the UMAP). However, results should be very similar.
 
@@ -323,7 +323,7 @@ In order to answer our research questions, we first had to follow the steps deta
 
 ### Extracting features/prediction
 
-Given the models and generated test sets, one can use the script `generate_pred_sets.py` in order to obtain the features needed. Note that those obtained feature files are part of what is downloaded in the [**pred_sets**]() repository on Zenodo.
+Given the models and generated test sets, one can use the script `generate_pred_sets.py` in order to obtain the features needed. Note that those obtained feature files are part of what is downloaded in the [**pred_sets**](https://zenodo.org/records/10028594) repository on Zenodo.
 
 Usage of the script is:
 
@@ -400,7 +400,7 @@ python generate_split_original_test_set.py -d cifar10 -t fuzz -o densenet100bc -
 
 will generate the three splits for the biggest clusters (i.e. number 0) for *Densenet100bc* (seed 1), along with what input seeds to use for training (85% of them) or for calculating later accuracy (15% of them). The actual number of the cluster will be returned in the terminal and will be different from the one provided by `-c` (since here it's the index of the clusters ranked by the number of data while the clustering assigned a different number)
 
-Once the splits are generated, the model needs to be retrained using each of those splits (and for each of the clusters we wish to evaluate accuracy). We provided them in the [**models**]() repository on Zenodo.
+Once the splits are generated, the model needs to be retrained using each of those splits (and for each of the clusters we wish to evaluate accuracy). We provided them in the [**models**](https://zenodo.org/records/10028594) repository on Zenodo.
 
 Finally, using the script `calculate_clusters_accuracy.py`, one can obtain the in/out cluster's accuracy leading to the results we presented in Table 2 in our paper. For instance:
 
@@ -434,9 +434,9 @@ The figures in RQ1 were obtained using the `dendrogram.py` script. For instance,
 python dendrogram.py -d cifar10 -t fuzz -o densenet100bc -i 1
 ```
 
-Note that, as we wrote in the paper, the thresholds to cluster here are subjective and were done so in order to make the figure easily readable. Yet, if running with another model, the manually chosen threshold can lead to inconsistent clusters and so should be changed. It has no impact since this is mainly used to be able to interpret the figure. 
+Note that, as we wrote in the paper, the thresholds to cluster here are subjective and were done so to make the figure easily readable. Yet, if running with another model, the manually chosen threshold can lead to inconsistent clusters and so should be changed. It has no impact since this is mainly used to be able to interpret the figure. 
 
-## RQ2:  Is the fault types coverage of test sets on a given model under test dependant on their reference model?
+## RQ2:  Is the fault types coverage of test sets on a given model under test dependent on their reference model?
 
 The heatmaps in RQ2 were obtained using `grouped_faults.py`, however, you first need to calculate the matrix for the heatmap. To do so, one needs to execute the following command for all models under test:
 
@@ -444,7 +444,7 @@ The heatmaps in RQ2 were obtained using `grouped_faults.py`, however, you first 
 python grouped_faults.py -d cifar10 -t fuzz -o densenet100bc -i 1
 ```
 
-If the matrix doesn't exist, it will be created. Note however it does NOT check if the matrix has already been populated or not if it exists, so running it might add more values than needed. The data needed is available to download in the [**data**]() repository on Zenodo.
+If the matrix doesn't exist, it will be created. Note however it does NOT check if the matrix has already been populated or not if it exists, so running it might add more values than needed. The data needed is available to download in the [**data**](https://zenodo.org/records/10028594) repository on Zenodo.
 
 Once it's done, to display the heatmap, one can just do:
 
@@ -464,7 +464,7 @@ python compute_corr.py -d cifar10 -t fuzz -o densenet100bc -i 0
 
 If `--save` is provided, the results will be added to a `.csv` file named `res.csv`. Note that, since it only ADDS the results, one has to be careful if some results already have been computed. It does not delete the files before executing nor doesn't it check whether the file is already populated or not. The `res.csv` file will contain the data needed to obtain Table 3 in our paper. It needs to be done for all models under test and all procedures in order to have the same Table 3. We provide said data in `results_files/`, in each `res_PROCEDURE.csv` file.
 
-Each `res_PROCEDURE.csv` is structured as follow: each row is the result for a model under test seed for a given similarity metric. It is structured in block of 6 rows (one for each metric), e.g. the first 6 rows are the results for the 6 metrics (PWCCA, CKA, Ortho, Acc, Dis and JDiv) for Densenet100bc seed 0, then the 6 next are for the 6 metrics for Densenet100bc seed 1, ...etc Available data are the obtained Kendall-tau, the associated p-value, the Top-1 and Top-5 criterion as well as the fault type coverage value obtained for the Top-1 and Top-5 criteria.
+Each `res_PROCEDURE.csv` is structured as follows: each row is the result for a model under test seed for a given similarity metric. It is structured in blocks of 6 rows (one for each metric), e.g. the first 6 rows are the results for the 6 metrics (PWCCA, CKA, Ortho, Acc, Dis and JDiv) for Densenet100bc seed 0, then the 6 next are for the 6 metrics for Densenet100bc seed 1, ...etc Available data are the obtained Kendall-tau, the associated p-value, the Top-1 and Top-5 criterion as well as the fault type coverage value obtained for the Top-1 and Top-5 criteria.
 
 If `--plot` is given, the data will be plotted to examine the correlation. 
 
@@ -474,4 +474,4 @@ The first part of RQ4 (Table 4) uses the same data from the previous `res.csv` f
 
 The second part of RQ4 (Table 5) uses the other generated `.csv` file i.e. `res_mult.csv` where the users can find the fault types coverage using the Overall Best First and Each Best First criteria for k = {2, 3 4}. We also provided those files in the directory `results_files/` with `res_mult_PROCEDURE.csv`.
 
-Each `res_mult_PROCEDURE.csv` is structured similarly as the `res_PROCEDURE.csv` files, with the same block structure of size 6. Available data are the obtained fault types coveraged by combining k = {2, 3, 4} test sets using EBF criterion and by combining k = {2, 3, 4} test sets using the OBF criterion.
+Each `res_mult_PROCEDURE.csv` is structured similarly to the `res_PROCEDURE.csv` files, with the same block structure of size 6. Available data are the obtained fault types covered by combining k = {2, 3, 4} test sets using the EBF criterion and by combining k = {2, 3, 4} test sets using the OBF criterion.
