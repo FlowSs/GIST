@@ -1,6 +1,6 @@
 ## Replication package for "GIST: Generated Inputs Sets Transferability in Deep Learning"
 
-This replication package contains the artifact associated with the paper "GIST: Generated Inputs Sets Transferability in Deep Learning" in order to help in replicating the results.
+This replication package contains the artifact associated with the paper "GIST: Generated Inputs Sets Transferability in Deep Learning" in order to help in replicating the results. This paper was submitted to the the *ACM Transactions on Software Engineering and Methodology* journal.
 
 **A preprint version of the paper is available on [arxiv]()**
 
@@ -426,7 +426,7 @@ Averaged pct of faults reduced (non-covered cluster) not in dat aug:  0.10292537
 
 which gives the accuracy on the remaining 15% of cluster 31 (here 74.07%) and the average on the other clusters (here 10.29%), all results being averaged over the 3 splits.
 
-## RQ1: For a given objective model, do some test sets cover similar fault types depending on their reference model type?
+## RQ1: Are test sets covering similar fault types and is this relation dependent on the type of their reference model?
 
 The figures in RQ1 were obtained using the `dendrogram.py` script. For instance, Figure 2 was obtained with:
 
@@ -436,7 +436,7 @@ python dendrogram.py -d cifar10 -t fuzz -o densenet100bc -i 1
 
 Note that, as we wrote in the paper, the thresholds to cluster here are subjective and were done so in order to make the figure easily readable. Yet, if running with another model, the manually chosen threshold can lead to inconsistent clusters and so should be changed. It has no impact since this is mainly used to be able to interpret the figure. 
 
-## RQ2: Are some test sets more likely to increase fault types coverage on an objective model depending on the reference model they were generated on?
+## RQ2:  Is the fault types coverage of test sets on a given model under test dependant on their reference model?
 
 The heatmaps in RQ2 were obtained using `grouped_faults.py`, however, you first need to calculate the matrix for the heatmap. To do so, one needs to execute the following command for all models under test:
 
