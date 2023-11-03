@@ -2,7 +2,7 @@
 
 This replication package contains the artifact associated with the paper "GIST: Generated Inputs Sets Transferability in Deep Learning" in order to help in replicating the results. This paper was submitted to the *ACM Transactions on Software Engineering and Methodology* journal.
 
-**A preprint version of the paper is available on [arxiv]()**
+**A preprint version of the paper is available on [arxiv](https://arxiv.org/abs/2311.00801)**
 
 ## Test transfer in a nutshell
 
